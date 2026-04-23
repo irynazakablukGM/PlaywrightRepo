@@ -1,13 +1,17 @@
 import { test, expect } from '@playwright/test';
+import { LoginPage } from '../pages/login.page';
+import { AccountPage } from '../pages/account.page'
+import { HomePage } from '../pages/home.page'; 
 
 test('Login with valid credentials', async ({ page }) => {
     test.skip(!!process.env.CI, 'Skip login test on CI env');
+  const loginPage = new LoginPage(page);
+  const accountPage = new AccountPage(page);
+  const homePage = new HomePage(page);
   await page.goto('/auth/login');
-  await page.getByTestId('email').fill('customer@practicesoftwaretesting.com');
-  await page.getByTestId('password').fill('welcome01');
-  await page.getByTestId('login-submit').click();
+  await loginPage.performLogin('customer2@practicesoftwaretesting.com', 'welcome01');
   await expect(page).toHaveURL('/account');
-  await expect(page.getByTestId('page-title')).toContainText('My account');
-  await expect(page.getByTestId('nav-menu')).toContainText('Jane Doe');
+  await expect(accountPage.pageTitle).toContainText('My account');
+  await expect(homePage.header.navMenu).toContainText('Jack Howe');
 }
 );
