@@ -34,7 +34,7 @@ export class HomePage{
     return await this.page.getByTestId('product-name').allTextContents();
   }
 
-  async getAllProductPrices() {
+  async getAllProductPrices(): Promise<number[]> {
      const prices = await this.page.getByTestId('product-price').allTextContents();
 
     return prices.map(p =>
@@ -43,6 +43,6 @@ export class HomePage{
   }
 
  async chooseFilter(category: string) {
-  await this.page.getByLabel(category).check();
+  await this.page.getByTestId('filters').locator('fieldset').getByLabel(category).check();
 }
 } 

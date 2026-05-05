@@ -14,7 +14,7 @@ enum Category {
     // wait until at least one filtered item appears
     await expect(homePage.getFirstProduct()).toContainText('Sander');
     const filteredItems = await homePage.getAllProductItems();
-     for (const item of filteredItems) {
+    for (const item of filteredItems) {
     expect(item).toContain('Sander');
   }
   });
