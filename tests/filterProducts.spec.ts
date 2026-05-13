@@ -1,5 +1,4 @@
-import { test, expect } from '@playwright/test';
-import { HomePage } from '../pages/home.page';
+import { test, expect } from '../fixures/app';
 
 enum Category {
   HAND_TOOLS = 'Hand Tools',
@@ -7,13 +6,12 @@ enum Category {
   OTHER = 'Other',
 }
 
-  test(`Filter product by ${Category.POWER_TOOLS}`, async ({ page }) => {
-    const homePage = new HomePage(page);
+  test(`Filter product by ${Category.POWER_TOOLS}`, async ({ page, app }) => {
     await page.goto('');
-    await homePage.chooseFilter('Sander');
+    await app.homePage.chooseFilter('Sander');
     // wait until at least one filtered item appears
-    await expect(homePage.getFirstProduct()).toContainText('Sander');
-    const filteredItems = await homePage.getAllProductItems();
+    await expect(app.homePage.getFirstProduct()).toContainText('Sander');
+    const filteredItems = await app.homePage.getAllProductItems();
     for (const item of filteredItems) {
     expect(item).toContain('Sander');
   }
