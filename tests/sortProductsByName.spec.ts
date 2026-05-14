@@ -1,16 +1,14 @@
-import { test, expect } from '@playwright/test';
-import { HomePage } from '../pages/home.page';
+import { test, expect } from '../fixures/app';
 
 [
   { label: 'Name ASC (A - Z)', option: 'Name (A - Z)', direction: 'asc'},
   { label: 'Name DESC (Z - A)', option: 'Name (Z - A)', direction: 'desc' },
 ].forEach(({ label, option, direction }) => {
-  test(`Sort product by ${label}`, async ({ page }) => {
-    const homePage = new HomePage(page);
+  test(`Sort product by ${label}`, async ({ page, app }) => {
     await page.goto('');
-    await homePage.sortOptions.selectOption(option);
+    await app.homePage.sortOptions.selectOption(option);
 
-    const productItems = await homePage.getAllProductItems();
+    const productItems = await app.homePage.getAllProductItems();
     const sortedProducts = [...productItems].sort((a, b) => 
          direction === 'asc'
         ? a.localeCompare(b)
