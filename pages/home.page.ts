@@ -31,7 +31,7 @@ export class HomePage{
   }
 
   async getFirstProductPrice(): Promise<string> {
-  return (await this.page.getByTestId('product-price').first().innerText()).trim();
+   return (await this.page.getByTestId('product-price').first().innerText()).trim();
 }
 
   async getAllProductItems() {
