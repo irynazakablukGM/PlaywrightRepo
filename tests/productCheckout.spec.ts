@@ -29,7 +29,8 @@ test('Verify logged-in user can complete checkout with credit card payment', asy
         cvv: "111",
         holderName: "Jack Howe"
     }
-    await loggedInApp.cartPage.fillBillingAddress('3333', '12', 'testState');
+    await loggedInApp.cartPage.fillBillingAddress('Algeria', '0000', '12');
+    await expect(loggedInApp.cartPage.proceedToPaymentButton).toBeEnabled();
     await loggedInApp.cartPage.proceedToPaymentButton.click();
     await loggedInApp.cartPage.selectPaymentMethod('Credit Card');
     await loggedInApp.cartPage.fillCardDetails(cardDetails.number, cardDetails.expiryDate, cardDetails.cvv, cardDetails.holderName);

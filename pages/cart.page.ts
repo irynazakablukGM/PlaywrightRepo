@@ -1,4 +1,4 @@
-import { Page, Locator} from "@playwright/test";
+import { Page, Locator, expect} from "@playwright/test";
 
 export class CartPage{
   page: Page; 
@@ -9,7 +9,7 @@ export class CartPage{
   proceedToPaymentButton: Locator;
   billingPostalCode: Locator;
   billingHouseNumber: Locator;
-  billingState: Locator;
+  billingCountry: Locator;
   paymentMethod: Locator;
   creditCardNumberField: Locator;
   creditCardExpiryDateField: Locator;
@@ -17,6 +17,7 @@ export class CartPage{
   creditCardHolderNameField: Locator;
   confirmPaymentButton: Locator;
   paymentSuccessMessage: Locator;
+  currentState: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -27,7 +28,7 @@ export class CartPage{
     this.proceedToPaymentButton = page.getByTestId('proceed-3')
     this.billingPostalCode = page.getByTestId('postal_code');
     this.billingHouseNumber = page.getByTestId('house_number');
-    this.billingState = page.getByTestId('state');
+    this.billingCountry = page.getByTestId('country');
     this.paymentMethod = page.getByTestId('payment-method');
     this.creditCardNumberField = page.getByTestId('credit_card_number');
     this.creditCardExpiryDateField = page.getByTestId('expiration_date');
@@ -35,17 +36,26 @@ export class CartPage{
     this.creditCardHolderNameField = page.getByTestId('card_holder_name');
     this.confirmPaymentButton = page.getByTestId('finish');
     this.paymentSuccessMessage = page.getByTestId('payment-success-message');
+    this.currentState = page.locator(
+      'aw-wizard-navigation-bar ul li.current .label',
+    );
   }
 
-async fillBillingAddress(postalCode: string, houseNumber:string, state:string): Promise<void> {
-  await this.billingPostalCode.click();
-  await this.billingPostalCode.pressSequentially(postalCode);
+async fillBillingAddress(country: string, postalCode: string, houseNumber: string) {
+  await expect(this.currentState).toHaveText('Billing Address');
+  
+  await this.billingCountry.selectOption(country);
 
-  await this.billingHouseNumber.click();
-  await this.billingHouseNumber.pressSequentially(houseNumber);
+  await expect(async () => {
+    await this.billingPostalCode.fill(postalCode);
+    await this.billingHouseNumber.fill(houseNumber);
+    
+    await this.billingPostalCode.dispatchEvent('input');
+    await this.billingHouseNumber.dispatchEvent('input');
+    await this.billingHouseNumber.blur();
 
-  await this.billingState.click();
-  await this.billingState.pressSequentially(state);
+    await expect(this.proceedToPaymentButton).toBeEnabled();
+  }).toPass({ timeout: 15000 });
 }
 
 async selectPaymentMethod(method: string): Promise<void> {
