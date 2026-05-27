@@ -1,4 +1,4 @@
-import { Page, Locator } from "@playwright/test";
+import { Page, Locator} from "@playwright/test";
 
 export class CartPage{
   page: Page; 
@@ -38,9 +38,14 @@ export class CartPage{
   }
 
 async fillBillingAddress(postalCode: string, houseNumber:string, state:string): Promise<void> {
-  await this.billingPostalCode.fill(postalCode);
-  await this.billingHouseNumber.fill(houseNumber);
-  return this.billingState.fill(state);
+  await this.billingPostalCode.click();
+  await this.billingPostalCode.pressSequentially(postalCode);
+
+  await this.billingHouseNumber.click();
+  await this.billingHouseNumber.pressSequentially(houseNumber);
+
+  await this.billingState.click();
+  await this.billingState.pressSequentially(state);
 }
 
 async selectPaymentMethod(method: string): Promise<void> {

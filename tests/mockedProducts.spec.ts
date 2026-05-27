@@ -1,6 +1,6 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../fixures/app';
 
-test('Verify list of mocked products', async ({ page }) => {
+test('Verify list of mocked products', async ({ page, app }) => {
   interface ProductsResponse {
     data: Array<Record<string, unknown>>;
     [key: string]: unknown;
@@ -32,5 +32,5 @@ test('Verify list of mocked products', async ({ page }) => {
 
   await page.goto('');
 
-  await expect(page.getByTestId('product-name')).toHaveCount(20);
+  await expect(app.homePage.productName).toHaveCount(20);
 });

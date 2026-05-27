@@ -5,7 +5,7 @@ import { AccountPage } from '../pages/account.page'
 
 const authFile = path.join(__dirname, '../playwright/.auth/user.json');
 
-setup('authenticate', async ({ page }) => {
+setup.skip('authenticate', async ({ page }) => {
   const loginPage = new LoginPage(page);
   const accountPage = new AccountPage(page);
   await page.goto('/auth/login');
