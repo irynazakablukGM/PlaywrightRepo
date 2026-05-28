@@ -19,24 +19,17 @@ jobs:
           node-version: lts/*
       - name: Install dependencies
         run: npm ci
-      - name: Get Playwright version
-        run: echo "PLAYWRIGHT_VERSION=$(npx playwright --version | cut -d' ' -f2)" >> $GITHUB_ENV
-      - name: Cache Playwright Browsers
-        id: cache-playwright
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-browsers-${{ env.PLAYWRIGHT_VERSION }}-${{ runner.os }}
-      - name: Install Playwright Browsers
-        if: steps.cache-playwright.outputs.cache-hit != 'true'
+      
+      - name: Install Playwright Browsers (Forced)
         env:
           PLAYWRIGHT_SKIP_BROWSER_GC: '1'
-        run: npx playwright install --with-deps
-      - name: Install Playwright Dependencies
-        if: steps.cache-playwright.outputs.cache-hit == 'true'
-        run: npx playwright install-deps
+          CI: 'true' 
+        run: |
+          npx playwright install --with-deps chromium firefox
+          
       - name: Run Playwright tests
         run: npx playwright test --project=chromium --project=firefox
+        
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
