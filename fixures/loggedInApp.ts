@@ -27,8 +27,9 @@ const test = base.extend<loggedInAppFixture>({
     }, token);
 
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
-    await expect(page.locator('[data-test="nav-menu"]')).toContainText('Jack Howe', { timeout: 15000 });
+    const navMenu = page.locator('[data-test="nav-menu"]');
+    await navMenu.waitFor({ state: 'visible', timeout: 15000 });
+    await expect(navMenu).toContainText('Jack Howe');
     await use(app);
   },
 });
