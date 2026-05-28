@@ -26,8 +26,9 @@ const test = base.extend<loggedInAppFixture>({
         localStorage.setItem('auth-token', authToken);
     }, token);
 
-    await page.reload();
-    await expect(page.locator('[data-test="nav-menu"]')).toContainText('Jack Howe');
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+    await expect(page.locator('[data-test="nav-menu"]')).toContainText('Jack Howe', { timeout: 15000 });
     await use(app);
   },
 });
