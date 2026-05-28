@@ -29,6 +29,8 @@ jobs:
           key: playwright-browsers-${{ env.PLAYWRIGHT_VERSION }}-${{ runner.os }}
       - name: Install Playwright Browsers
         if: steps.cache-playwright.outputs.cache-hit != 'true'
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_GC: '1'
         run: npx playwright install --with-deps
       - name: Install Playwright Dependencies
         if: steps.cache-playwright.outputs.cache-hit == 'true'
