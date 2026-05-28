@@ -11,7 +11,7 @@ env:
 jobs:
   test:
     timeout-minutes: 60
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -19,17 +19,12 @@ jobs:
           node-version: lts/*
       - name: Install dependencies
         run: npm ci
-      
-      - name: Install Playwright Browsers (Forced)
+      - name: Install Playwright Browsers
         env:
           PLAYWRIGHT_SKIP_BROWSER_GC: '1'
-          CI: 'true' 
-        run: |
-          npx playwright install --with-deps chromium firefox
-          
+        run: npx playwright install --with-deps --force chromium firefox
       - name: Run Playwright tests
         run: npx playwright test --project=chromium --project=firefox
-        
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
