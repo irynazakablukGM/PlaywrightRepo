@@ -1,6 +1,6 @@
 import { test, expect } from '../fixures/app';
 
-test('Verify user can view product details', async ({ page, app }) => {
+test('Verify user can view product details', { tag: '@smoke' },  async ({ page, app }) => {
   await page.goto('');
   await app.homePage.getProductItem('Combination Pliers').click();
   expect(page.url()).toContain('/product');

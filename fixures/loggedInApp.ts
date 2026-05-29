@@ -1,5 +1,6 @@
 import { test as base, expect } from '../fixures/app';
 import { App } from '../pages/app';
+import { USER_EMAIL, USER_PASSWORD, USER_NAME } from '../config/baseConfig';
 
 type loggedInAppFixture = {
   loggedInApp: App;
@@ -13,10 +14,10 @@ const test = base.extend<loggedInAppFixture>({
   loggedInApp: async ({ app, request, page }, use) => {
     const resp = await request.post('https://api.practicesoftwaretesting.com/users/login', {
         data: {
-            'email': 'customer2@practicesoftwaretesting.com',
-            'password': 'welcome01'
-        }
-    })
+            'email': USER_EMAIL,
+            'password': USER_PASSWORD,
+        },
+    });
     const jsonData = await resp.json() as LoginResponse;
     const token = jsonData.access_token;
 
@@ -29,7 +30,7 @@ const test = base.extend<loggedInAppFixture>({
     await page.goto('/');
     const navMenu = page.locator('[data-test="nav-menu"]');
     await navMenu.waitFor({ state: 'visible', timeout: 15000 });
-    await expect(navMenu).toContainText('Jack Howe');
+    await expect(navMenu).toContainText(USER_NAME);
     await use(app);
   },
 });
