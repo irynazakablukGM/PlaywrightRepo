@@ -5,13 +5,31 @@ type loggedInAppFixture = {
   loggedInApp: App;
 };
 
-const test = base.extend<loggedInAppFixture>({
-  loggedInApp: async ({ app, page }, use) => {
-    await page.goto('/auth/login');
-    await app.loginPage.performLogin('customer2@practicesoftwaretesting.com', 'welcome01');
-    await expect(page).toHaveURL('/account');
-    await expect(app.accountPage.pageTitle).toContainText('My account');
+interface LoginResponse {
+  access_token: string;
+}
 
+const test = base.extend<loggedInAppFixture>({
+  loggedInApp: async ({ app, request, page }, use) => {
+    const resp = await request.post('https://api.practicesoftwaretesting.com/users/login', {
+        data: {
+            'email': 'customer2@practicesoftwaretesting.com',
+            'password': 'welcome01'
+        }
+    })
+    const jsonData = await resp.json() as LoginResponse;
+    const token = jsonData.access_token;
+
+    await page.goto('/');
+
+    await page.evaluate((authToken) => {
+        localStorage.setItem('auth-token', authToken);
+    }, token);
+
+    await page.goto('/');
+    const navMenu = page.locator('[data-test="nav-menu"]');
+    await navMenu.waitFor({ state: 'visible', timeout: 15000 });
+    await expect(navMenu).toContainText('Jack Howe');
     await use(app);
   },
 });
