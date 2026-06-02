@@ -13,25 +13,32 @@ interface LoginResponse {
 const test = base.extend<loggedInAppFixture>({
   loggedInApp: async ({ app, request, page }, use) => {
     const resp = await request.post('https://api.practicesoftwaretesting.com/users/login', {
-        data: {
-            'email': USER_EMAIL,
-            'password': USER_PASSWORD,
-        },
+      data: {
+        email: USER_EMAIL,
+        password: USER_PASSWORD,
+      },
     });
-    const jsonData = await resp.json() as LoginResponse;
-    const token = jsonData.access_token;
+
+    if (!resp.ok()) {
+      throw new Error(`Login failed: ${resp.status()}`);
+    }
+
+    const { access_token: token } = (await resp.json()) as LoginResponse;
 
     await page.goto('/');
 
     await page.evaluate((authToken) => {
-        localStorage.setItem('auth-token', authToken);
+      localStorage.setItem('auth-token', authToken);
     }, token);
 
-    await page.goto('/');
+    await page.reload();
+
     const navMenu = page.locator('[data-test="nav-menu"]');
     await navMenu.waitFor({ state: 'visible', timeout: 15000 });
     await expect(navMenu).toContainText(USER_NAME);
+
     await use(app);
   },
 });
+
 export { test, expect };
