@@ -1,4 +1,4 @@
-name: Playwright Tests
+name: Smoke Tests
 on:
   push:
     branches: [ main, master ]
@@ -22,11 +22,11 @@ jobs:
       run: npm ci
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
-    - name: Run Playwright tests
-      run: TESTOMATIO=${{ secrets.TESTOMATIO }} npx playwright test --project=chromium
+    - name: Run Smoke tests
+      run: TESTOMATIO=${{ secrets.TESTOMATIO }} npx playwright test --project=chromium --grep @smoke
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
-        name: playwright-report
+        name: smoke-report
         path: playwright-report/
         retention-days: 30

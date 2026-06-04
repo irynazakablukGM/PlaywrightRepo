@@ -1,6 +1,6 @@
 import { test, expect } from '../fixures/app';
 
-test('Verify list of mocked products', async ({ page, app }) => {
+test('Verify list of mocked products', { tag: '@regression' }, async ({ page, app }) => {
   interface ProductsResponse {
     data: Array<Record<string, unknown>>;
     [key: string]: unknown;

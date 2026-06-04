@@ -1,6 +1,6 @@
 import { test, expect } from '../fixures/loggedInApp';
 
-test('Verify logged-in user can complete checkout with credit card payment', async ({ page, loggedInApp }) => {
+test('Verify logged-in user can complete checkout with credit card payment', { tag: '@regression' }, async ({ page, loggedInApp }) => {
   await test.step('Add first product to the cart and check it in the cart', async () => {
     await page.goto('');
     const productName = await loggedInApp.homePage.getFirstProduct().innerText();
