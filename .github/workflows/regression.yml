@@ -28,5 +28,5 @@ jobs:
       if: ${{ !cancelled() }}
       with:
         name: regression-report
-        path: regression-report/
+        path: playwright-report/
         retention-days: 30

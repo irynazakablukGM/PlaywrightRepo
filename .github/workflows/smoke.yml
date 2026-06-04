@@ -28,5 +28,5 @@ jobs:
       if: ${{ !cancelled() }}
       with:
         name: smoke-report
-        path: smoke-report/
+        path: playwright-report/
         retention-days: 30
